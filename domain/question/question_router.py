@@ -4,6 +4,9 @@ from database.models import Question
 from domain.question import question_schema as sc
 from domain.question.question_crud import *
 from database.database import get_db
+from starlette import status
+
+
 question_router = APIRouter(
     prefix='/question',
 )
@@ -18,3 +21,7 @@ def question_list(db:Session=Depends(get_db)):
 def question_detail(question_id : int, db:Session=Depends(get_db)):
     question = get_question(db,question_id)
     return question
+
+@question_router.post('/create',status_code=status.HTTP_204_NO_CONTENT)
+def question_create(_question : sc.QuestionCreate, db : Session=Depends(get_db)):
+    create_question(db,_question)
